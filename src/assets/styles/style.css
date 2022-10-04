@@ -1,3 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Gemunu+Libre&family=Inter+Tight:wght@300;400;600;700;800;900&display=swap');
+:root{
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 300;
+    background-color: #e9ecef;
+
+    --primary-dark: #0F0E0E;
+    --primary-grey: #5C6B73;
+    --primary-color: #4cc9f0;
+    --accent-color: #E0D2C3;
+}
+
 html,
 body,
 #app{
