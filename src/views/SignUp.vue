@@ -1,5 +1,22 @@
 <script setup>
+    import { reactive } from 'vue';
+    import axios from 'axios';
+
     const form_url = "...";
+
+    const user = reactive({
+        email: '',
+        first_name: '',
+        last_name: '',
+        password: '',
+        password_confirmation: ''
+    });
+
+    function submitForm(){
+        axios
+          .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+          .then(res => (console.log(res)))
+    }
 
 </script>
 
@@ -10,25 +27,25 @@
             <h1 class="form_title">Creeaza un cont</h1>
         </div>
         <div class="sign_up_container">
-            <form :action=form_url class="form_body" method="POST">
+            <form @submit.prevent="submitForm" class="form_body" method="POST">
                 <fieldset class="form_group">
-                    <input type="email" name="email" id="form_email" placeholder="Email">
+                    <input type="email" name="email" placeholder="Email" v-model="user.email">
                     <font-awesome-icon class="icon" icon="fa-solid fa-envelope" />
                 </fieldset>
                 <fieldset class="form_group">
-                    <input type="text" name="last_name" id="form_last_name" placeholder="Nume">
+                    <input type="text" name="last_name" id="form_last_name" placeholder="Nume" v-model="user.last_name">
                     <font-awesome-icon icon="fa-solid fa-user" />
                 </fieldset>
                 <fieldset class="form_group">
-                    <input type="text" name="first_name" id="form_first_name" placeholder="Prenume">
+                    <input type="text" name="first_name" id="form_first_name" placeholder="Prenume" v-model="user.first_name">
                     <font-awesome-icon icon="fa-solid fa-user" />
                 </fieldset>
                 <fieldset class="form_group">
-                    <input type="password" name="password" id="form_password" placeholder="Parola">
+                    <input type="password" name="password" id="form_password" placeholder="Parola" v-model="user.password">
                     <font-awesome-icon icon="fa-solid fa-lock" />
                 </fieldset>
                 <fieldset class="form_group">
-                    <input type="password" name="confirm_password" id="form_confirm_password" placeholder="Confirma parola">
+                    <input type="password" name="password_confirmation" id="form_confirm_password" placeholder="Confirma parola" v-model="user.password_confirmation">
                     <font-awesome-icon icon="fa-solid fa-lock" />
                 </fieldset>
                     <input type="submit" value="Submit">
@@ -49,7 +66,7 @@
         flex-direction: column;
     }
     .sign_up_container{
-        width: clamp(270px,40vw,500px);
+        width: clamp(300px,40vw,500px);
         height: 400px;
         background-color: var(--accent-color);
         padding: 2rem;
@@ -57,7 +74,7 @@
     }
 
     .form_header{
-        width: clamp(270px,40vw,500px);
+        width: clamp(300px,40vw,500px);
         border-radius: 15px 15px 0 0;
         padding: 0.5rem;
         height: 3rem;
