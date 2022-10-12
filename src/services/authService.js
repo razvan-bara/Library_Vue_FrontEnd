@@ -1,5 +1,7 @@
 import { API } from './API';
 import { defineStore } from 'pinia';
+import { useToast } from 'vue-toast-notification';
+import router from '@/router';
 
 
 export const useAuthService = defineStore('users', {
@@ -36,19 +38,19 @@ export const useAuthService = defineStore('users', {
             for (const err in validationErrors) {
                 switch(err) {
                     case 'email': 
-                        this.registerErrors.email = validationErrors[err];
+                        this.registerErrors.email = validationErrors[err][0];
                         break;  
                     case 'first_name': 
-                        this.registerErrors.first_name = validationErrors[err];
+                        this.registerErrors.first_name = validationErrors[err][0];
                         break; 
                     case 'last_name': 
-                        this.registerErrors.last_name = validationErrors[err];
+                        this.registerErrors.last_name = validationErrors[err][0];
                         break; 
                     case 'password': 
                         this.registerErrors.password = validationErrors[err][0];
                         break; 
                     case 'password_confirmation': 
-                        this.registerErrors.password_confirmation = validationErrors[err];
+                        this.registerErrors.password_confirmation = validationErrors[err][0];
                         break; 
                 }
             }
@@ -59,7 +61,14 @@ export const useAuthService = defineStore('users', {
                 const response = await API.post('/register', userData);
                 const data = response.data;
                 this.setUserData(data.user.fullname, data.user.email, data.token);
-                console.log(response);
+
+                const $toast = useToast();
+
+                $toast.success('Cont creeat cu succes',{
+                    position: 'top-right'
+                });
+
+                router.push({ path: '/' });
             }catch(error) {
                 let validationErrors = error.response.data.data;
                 if(error.response.status === 403){
