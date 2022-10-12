@@ -9,6 +9,7 @@
     --primary-color: #a67b5b;
     --secondary-color: #330f0a;
     --accent-color: #edede9;
+    --success-color: #55a630;
 }
 
 html,
@@ -16,3 +17,8 @@ body,
 #app{
     height: 100%;
 }
+
+.v-toast__item--success {
+    background-color: var(--success-color) !important;
+    color: var(--accent-color) !important;
+  }
