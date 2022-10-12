@@ -61,9 +61,11 @@ export const useAuthService = defineStore('users', {
                 this.setUserData(data.user.fullname, data.user.email, data.token);
                 console.log(response);
             }catch(error) {
-                console.log(error.response.data.data);
                 let validationErrors = error.response.data.data;
-                this.mapRegistrationErrors(validationErrors);
+                if(error.response.status === 403){
+                    let validationErrors = error.response.data.data;
+                    this.mapRegistrationErrors(validationErrors);
+                }
             }
         }
     },
