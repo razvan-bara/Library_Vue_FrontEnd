@@ -67,9 +67,8 @@
     }
     .sign_up_container{
         width: clamp(300px,40vw,500px);
-        height: 400px;
         background-color: var(--accent-color);
-        padding: 2rem;
+        padding: 0.5rem 2rem 2rem;
         border-radius: 0 0 15px 15px;
     }
 
@@ -90,18 +89,26 @@
         font-weight: 600;
     }
 
-
     .form_body{
         font-weight: 400;
         font-size: 1rem;
         width: 100%;
-        height: 100%;
-        aspect-ratio: 1;
+        height: 350px;
     }
 
     .form_group{
+        height: 40px;
         position: relative;
         margin: 20px auto;
+    }
+
+    .form_group::after{
+        position: absolute;
+        inset: 75% 0 0 0;
+        white-space: nowrap; 
+        content: attr(data-error);
+        color: red;
+        font-size: 0.95rem;
     }
 
     .form_group > input{
@@ -111,6 +118,11 @@
         border: none;
         border-bottom: 1.5px solid var(--primary-dark);
     }
+
+    .form_group > input:focus{
+        background-color: inherit;
+    }
+
     .form_group > svg {
         /* filter: drop-shadow(1px 1px 10px var(--primary-grey)); */
         top: 17%;
