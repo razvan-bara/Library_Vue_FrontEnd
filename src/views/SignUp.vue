@@ -19,10 +19,13 @@
     }
 
     function removeError(e){
-        let fieldsetElement = e.target.parentElement;
-        if(fieldsetElement.getAttribute('data-error') != ''){
-            fieldsetElement.setAttribute('data-error','');
+        let inputName = e.target.name;
+        
+        if(inputName === 'password_confirmation'){
+            inputName = 'password';
         }
+
+        registerErrors[inputName] = '';
     }
 
 </script>
@@ -106,13 +109,12 @@
     .form_group{
         height: 40px;
         position: relative;
-        margin: 20px auto;
+        margin: 20px auto 15px;
     }
 
     .form_group::after{
         position: absolute;
         inset: 75% 0 0 0;
-        white-space: nowrap; 
         content: attr(data-error);
         color: red;
         font-size: 0.95rem;
