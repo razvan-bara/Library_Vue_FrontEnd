@@ -1,8 +1,10 @@
 <script setup>
     import { reactive } from 'vue';
-    import axios from 'axios';
+    import { useAuthService } from '@/services/authService.js';
 
-    const form_url = "...";
+    const authService = useAuthService();
+    const registerErrors = authService.registerErrors;
+
 
     const user = reactive({
         email: '',
@@ -13,9 +15,14 @@
     });
 
     function submitForm(){
-        axios
-          .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-          .then(res => (console.log(res)))
+        authService.register(user);
+    }
+
+    function removeError(e){
+        let fieldsetElement = e.target.parentElement;
+        if(fieldsetElement.getAttribute('data-error') != ''){
+            fieldsetElement.setAttribute('data-error','');
+        }
     }
 
 </script>
@@ -28,24 +35,24 @@
         </div>
         <div class="sign_up_container">
             <form @submit.prevent="submitForm" class="form_body" method="POST">
-                <fieldset class="form_group">
-                    <input type="email" name="email" placeholder="Email" v-model="user.email">
+                <fieldset class="form_group" :data-error="registerErrors.email">
+                    <input @focus="removeError" type="email" name="email" placeholder="Email" v-model="user.email" >
                     <font-awesome-icon class="icon" icon="fa-solid fa-envelope" />
                 </fieldset>
-                <fieldset class="form_group">
-                    <input type="text" name="last_name" id="form_last_name" placeholder="Nume" v-model="user.last_name">
+                <fieldset class="form_group" :data-error="registerErrors.last_name">
+                    <input @focus="removeError" type="text" name="last_name" id="form_last_name" placeholder="Nume" v-model="user.last_name">
                     <font-awesome-icon icon="fa-solid fa-user" />
                 </fieldset>
-                <fieldset class="form_group">
-                    <input type="text" name="first_name" id="form_first_name" placeholder="Prenume" v-model="user.first_name">
+                <fieldset class="form_group" :data-error="registerErrors.first_name">
+                    <input @focus="removeError" type="text" name="first_name" id="form_first_name" placeholder="Prenume" v-model="user.first_name">
                     <font-awesome-icon icon="fa-solid fa-user" />
                 </fieldset>
-                <fieldset class="form_group">
-                    <input type="password" name="password" id="form_password" placeholder="Parola" v-model="user.password">
+                <fieldset class="form_group" :data-error="registerErrors.password">
+                    <input @focus="removeError" type="password" name="password" id="form_password" placeholder="Parola" v-model="user.password">
                     <font-awesome-icon icon="fa-solid fa-lock" />
                 </fieldset>
-                <fieldset class="form_group">
-                    <input type="password" name="password_confirmation" id="form_confirm_password" placeholder="Confirma parola" v-model="user.password_confirmation">
+                <fieldset class="form_group" :data-error="registerErrors.password_confirmation">
+                    <input @focus="removeError" type="password" name="password_confirmation" id="form_confirm_password" placeholder="Confirma parola" v-model="user.password_confirmation">
                     <font-awesome-icon icon="fa-solid fa-lock" />
                 </fieldset>
                     <input type="submit" value="Submit">
@@ -67,9 +74,8 @@
     }
     .sign_up_container{
         width: clamp(300px,40vw,500px);
-        height: 400px;
         background-color: var(--accent-color);
-        padding: 2rem;
+        padding: 0.5rem 2rem 2rem;
         border-radius: 0 0 15px 15px;
     }
 
@@ -90,18 +96,26 @@
         font-weight: 600;
     }
 
-
     .form_body{
         font-weight: 400;
         font-size: 1rem;
         width: 100%;
-        height: 100%;
-        aspect-ratio: 1;
+        height: 350px;
     }
 
     .form_group{
+        height: 40px;
         position: relative;
         margin: 20px auto;
+    }
+
+    .form_group::after{
+        position: absolute;
+        inset: 75% 0 0 0;
+        white-space: nowrap; 
+        content: attr(data-error);
+        color: red;
+        font-size: 0.95rem;
     }
 
     .form_group > input{
@@ -111,6 +125,11 @@
         border: none;
         border-bottom: 1.5px solid var(--primary-dark);
     }
+
+    .form_group > input:focus{
+        background-color: inherit;
+    }
+
     .form_group > svg {
         /* filter: drop-shadow(1px 1px 10px var(--primary-grey)); */
         top: 17%;
