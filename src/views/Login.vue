@@ -1,68 +1,49 @@
 <script setup>
-    import { reactive } from 'vue';
+    import { reactive, onBeforeMount } from 'vue';
     import { useAuthService } from '@/services/authService.js';
 
     const authService = useAuthService();
-    const registerErrors = authService.registerErrors;
+    const loginErrors = authService.loginErrors;
 
     const user = reactive({
         email: '',
-        first_name: '',
-        last_name: '',
         password: '',
-        password_confirmation: ''
     });
 
-    function registerUser(){
-        authService.register(user);
+    function loginUser(){
+        authService.login(user);
     }
 
     function removeError(e){
         let inputName = e.target.name;
-        
-        if(inputName === 'password_confirmation'){
-            inputName = 'password';
-        }
 
-        registerErrors[inputName] = '';
-        registerErrors.serverError = '';
+        loginErrors[inputName] = '';
+        loginErrors.serverError = '';
     }
 
 </script>
 
 
 <template>
-    <section class="sign_up_wrapper">
+    <section class="login_wrapper">
         <div class="form_header">
-            <h1 class="form_title">Creeaza un cont</h1>
+            <h1 class="form_title">Intra in cont</h1>
         </div>
-        <div class="sign_up_container">
-            <form @submit.prevent="registerUser" class="form_body" method="POST">
-                <fieldset class="form_group" :data-error="registerErrors.email">
+        <div class="login_container">
+            <form @submit.prevent="loginUser" class="form_body" method="POST">
+                <fieldset class="form_group" :data-error="loginErrors.email">
                     <input @focus="removeError" type="email" name="email" placeholder="Email" v-model="user.email" >
                     <font-awesome-icon class="icon" icon="fa-solid fa-envelope" />
                 </fieldset>
-                <fieldset class="form_group" :data-error="registerErrors.last_name">
-                    <input @focus="removeError" type="text" name="last_name" id="form_last_name" placeholder="Nume" v-model="user.last_name">
-                    <font-awesome-icon icon="fa-solid fa-user" />
-                </fieldset>
-                <fieldset class="form_group" :data-error="registerErrors.first_name">
-                    <input @focus="removeError" type="text" name="first_name" id="form_first_name" placeholder="Prenume" v-model="user.first_name">
-                    <font-awesome-icon icon="fa-solid fa-user" />
-                </fieldset>
-                <fieldset class="form_group" :data-error="registerErrors.password">
+                <fieldset class="form_group" :data-error="loginErrors.password">
                     <input @focus="removeError" type="password" name="password" id="form_password" placeholder="Parola" v-model="user.password">
                     <font-awesome-icon icon="fa-solid fa-lock" />
                 </fieldset>
-                <fieldset class="form_group" :data-error="registerErrors.password_confirmation">
-                    <input @focus="removeError" type="password" name="password_confirmation" id="form_confirm_password" placeholder="Confirma parola" v-model="user.password_confirmation">
-                    <font-awesome-icon icon="fa-solid fa-lock" />
-                </fieldset>
-                    <input class="btn primary_btn" type="submit" value="Inregistreaza">
-                    <router-link to="/login"><button class="btn secondary_btn">Login</button></router-link>
-                    <p class="error_color" v-if="registerErrors.serverError">
+                    <input class="btn primary_btn" type="submit" value="Login">
+                    <router-link to="/register"><button class="btn secondary_btn">Creeaza-ti contul</button></router-link>
+                    <p class="error_color" v-if="loginErrors.serverError">
                         <font-awesome-icon icon="fa-solid fa-triangle-exclamation" /> 
-                        <span class="error_text"> {{ registerErrors.serverError }} </span> 
+                        <span class="error_text"> {{ loginErrors.serverError }} </span> 
                     </p>
             </form>
         </div>
@@ -71,7 +52,7 @@
 
 <style scoped>
 
-    .sign_up_wrapper{
+    .login_wrapper{
         background: url("../assets/imgs/background_auth.jpg") no-repeat center center fixed;
         color: var(--primary-dark);
         height: 100%;
@@ -80,7 +61,7 @@
         align-items: center;
         flex-direction: column;
     }
-    .sign_up_container{
+    .login_container{
         width: clamp(300px,40vw,500px);
         background-color: var(--accent-color);
         padding: 0.5rem 2rem 2rem;
@@ -151,7 +132,7 @@
         height: 40px;
         cursor: pointer;
         border-radius: 40px;
-        transition: all 0.5s ease 0s;
+        transition: opacity 0.5s ease, background-color 0.5s ease;
         border: 1px solid var(--primary-grey);
     }
 
