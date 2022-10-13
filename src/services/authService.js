@@ -41,6 +41,7 @@ export const useAuthService = defineStore('users', {
             this.userData.last_name = last_name;
             this.userData.email = email;
             this.userData.token = token;
+            localStorage.setItem('userData', JSON.stringify(this.userData));
         },
 
         mapRegistrationErrors(validationErrors) {
