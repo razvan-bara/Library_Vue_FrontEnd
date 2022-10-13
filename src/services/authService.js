@@ -19,6 +19,11 @@ export const useAuthService = defineStore('users', {
             'last_name': '',
             'password': '',
             'password_confirmation': ''
+        },
+
+        loginErrors: {
+            'email': '',
+            'password': '',
         }
     }),
 
@@ -56,6 +61,19 @@ export const useAuthService = defineStore('users', {
             }
         },
 
+        mapLoginErrors(validationErrors) {
+            for (const err in validationErrors) {
+                switch(err) {
+                    case 'email': 
+                        this.registerErrors.email = validationErrors[err][0];
+                        break;  
+                    case 'password': 
+                        this.registerErrors.password = validationErrors[err][0];
+                        break; 
+                }
+            }
+        },
+
         async register(userData) {
             try{
                 const response = await API.post('/register', userData);
@@ -76,7 +94,29 @@ export const useAuthService = defineStore('users', {
                     this.mapRegistrationErrors(validationErrors);
                 }
             }
-        }
+        },
+
+        async login(userData) {
+            try{
+                const response = await API.post('/login', userData);
+                const data = response.data.data;
+                this.setUserData(data.user.first_name, data.user.last_name, data.user.email, data.token);
+
+                const $toast = useToast();
+
+                $toast.success('Ai intrat in cont',{
+                    position: 'top-right'
+                });
+
+                router.push({ path: '/' });
+            }catch(error) {
+                if(error.response.status === 403){
+                    let validationErrors = error.response.data.data;
+                    this.mapLoginErrors(validationErrors);
+                }
+            }
+        },
+
     },
 
 })
