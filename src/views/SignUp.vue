@@ -14,7 +14,7 @@
         password_confirmation: ''
     });
 
-    function submitForm(){
+    function registerUser(){
         authService.register(user);
     }
 
@@ -37,7 +37,7 @@
             <h1 class="form_title">Creeaza un cont</h1>
         </div>
         <div class="sign_up_container">
-            <form @submit.prevent="submitForm" class="form_body" method="POST">
+            <form @submit.prevent="registerUser" class="form_body" method="POST">
                 <fieldset class="form_group" :data-error="registerErrors.email">
                     <input @focus="removeError" type="email" name="email" placeholder="Email" v-model="user.email" >
                     <font-awesome-icon class="icon" icon="fa-solid fa-envelope" />
@@ -58,7 +58,8 @@
                     <input @focus="removeError" type="password" name="password_confirmation" id="form_confirm_password" placeholder="Confirma parola" v-model="user.password_confirmation">
                     <font-awesome-icon icon="fa-solid fa-lock" />
                 </fieldset>
-                    <input type="submit" value="Submit">
+                    <input class="btn primary_btn" type="submit" value="Inregistreaza">
+                    <router-link to="/login"><button class="btn secondary_btn">Login</button></router-link>
             </form>
         </div>
     </section>
@@ -103,7 +104,7 @@
         font-weight: 400;
         font-size: 1rem;
         width: 100%;
-        height: 350px;
+        height: 380px;
     }
 
     .form_group{
@@ -139,20 +140,34 @@
         position: absolute;
     }
 
-    input[type="submit"]{
+    .btn{
         font-weight: 700;
         text-align: center;
+        margin-bottom: 10px;
         width: 100%;
         height: 40px;
-        background-color: var(--primary-color);
         cursor: pointer;
         border-radius: 40px;
-        transition: opacity 0.5s ease 0s;
-        box-shadow: 4px 6px 10px 1px var(--primary-grey);
+        transition: all 0.5s ease 0s;
+        border: 1px solid var(--primary-grey);
     }
 
-    input[type="submit"]:hover{
+    .primary_btn{
+        background-color: var(--primary-color);
+        color: var(--primary-dark);
+    }
+
+    .primary_btn:hover{
         opacity: 0.7;
+    }
+
+    .secondary_btn{
+        opacity: 1;
+        color: var(--primary-dark);
+    }
+
+    .secondary_btn:hover{
+        background-color: var(--primary-color);
     }
 
     @media screen and (min-width: 769px) {
