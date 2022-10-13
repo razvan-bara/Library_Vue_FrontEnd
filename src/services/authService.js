@@ -8,7 +8,8 @@ export const useAuthService = defineStore('users', {
 
     state: () => ({
         userData: {
-            'fullname': '',
+            'first_name': '',
+            'last_name': '',
             'email': '',
             'token': ''
         },
@@ -33,8 +34,9 @@ export const useAuthService = defineStore('users', {
 
     actions: {
 
-        setUserData(fullname, email, token){
-            this.userData.fullname = fullname;
+        setUserData(first_name, last_name, email, token){
+            this.userData.first_name = first_name;
+            this.userData.last_name = last_name;
             this.userData.email = email;
             this.userData.token = token;
         },
@@ -77,8 +79,8 @@ export const useAuthService = defineStore('users', {
         async register(userData) {
             try{
                 const response = await API.post('/register', userData);
-                const data = response.data;
-                this.setUserData(data.user.fullname, data.user.email, data.token);
+                const data = response.data.data;
+                this.setUserData(data.user.first_name, data.user.last_name, data.user.email, data.token);
 
                 const $toast = useToast();
 
@@ -88,7 +90,6 @@ export const useAuthService = defineStore('users', {
 
                 router.push({ path: '/' });
             }catch(error) {
-                let validationErrors = error.response.data.data;
                 if(error.response.status === 403){
                     let validationErrors = error.response.data.data;
                     this.mapRegistrationErrors(validationErrors);
