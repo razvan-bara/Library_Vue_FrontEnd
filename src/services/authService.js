@@ -19,12 +19,14 @@ export const useAuthService = defineStore('users', {
             'first_name': '',
             'last_name': '',
             'password': '',
-            'password_confirmation': ''
+            'password_confirmation': '',
+            'serverError': ''
         },
 
         loginErrors: {
             'email': '',
             'password': '',
+            'serverError': ''
         }
     }),
 
@@ -67,10 +69,10 @@ export const useAuthService = defineStore('users', {
             for (const err in validationErrors) {
                 switch(err) {
                     case 'email': 
-                        this.registerErrors.email = validationErrors[err][0];
+                        this.loginErrors.email = validationErrors[err][0];
                         break;  
                     case 'password': 
-                        this.registerErrors.password = validationErrors[err][0];
+                        this.loginErrors.password = validationErrors[err][0];
                         break; 
                 }
             }
@@ -90,9 +92,11 @@ export const useAuthService = defineStore('users', {
 
                 router.push({ path: '/' });
             }catch(error) {
-                if(error.response.status === 403){
+                if(error.response && error.response.status === 403){
                     let validationErrors = error.response.data.data;
                     this.mapRegistrationErrors(validationErrors);
+                } else {
+                    this.registerErrors.serverError = 'Conexiunea cu serverul esuata, incercati mai tarziu';
                 }
             }
         },
@@ -111,9 +115,14 @@ export const useAuthService = defineStore('users', {
 
                 router.push({ path: '/' });
             }catch(error) {
-                if(error.response.status === 403){
+                if(error.response && error.response.status === 403){
                     let validationErrors = error.response.data.data;
                     this.mapLoginErrors(validationErrors);
+                } else if(error.response && error.response.status === 401) {
+                    let wrongCredentialsError = error.response.data.message;
+                    this.loginErrors.serverError = wrongCredentialsError;
+                } else {
+                    this.loginErrors.serverError = 'Conexiunea cu serverul esuata, incercati mai tarziu';
                 }
             }
         },
