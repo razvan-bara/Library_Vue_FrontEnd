@@ -18,6 +18,7 @@
         let inputName = e.target.name;
 
         loginErrors[inputName] = '';
+        loginErrors.serverError = '';
     }
 
 </script>
@@ -40,6 +41,10 @@
                 </fieldset>
                     <input class="btn primary_btn" type="submit" value="Login">
                     <router-link to="/register"><button class="btn secondary_btn">Creeaza-ti contul</button></router-link>
+                    <p class="error_color" v-if="loginErrors.serverError">
+                        <font-awesome-icon icon="fa-solid fa-triangle-exclamation" /> 
+                        <span class="error_text"> {{ loginErrors.serverError }} </span> 
+                    </p>
             </form>
         </div>
     </section>
@@ -96,7 +101,7 @@
         position: absolute;
         inset: 75% 0 0 0;
         content: attr(data-error);
-        color: red;
+        color: var(--error-color);
         font-size: 0.95rem;
     }
 
@@ -147,6 +152,9 @@
 
     .secondary_btn:hover{
         background-color: var(--primary-color);
+    }
+    .error_text{
+        padding-left: 2px;
     }
 
     @media screen and (min-width: 769px) {

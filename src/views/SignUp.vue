@@ -5,7 +5,6 @@
     const authService = useAuthService();
     const registerErrors = authService.registerErrors;
 
-
     const user = reactive({
         email: '',
         first_name: '',
@@ -26,6 +25,7 @@
         }
 
         registerErrors[inputName] = '';
+        registerErrors.serverError = '';
     }
 
 </script>
@@ -60,6 +60,10 @@
                 </fieldset>
                     <input class="btn primary_btn" type="submit" value="Inregistreaza">
                     <router-link to="/login"><button class="btn secondary_btn">Login</button></router-link>
+                    <p class="error_color" v-if="registerErrors.serverError">
+                        <font-awesome-icon icon="fa-solid fa-triangle-exclamation" /> 
+                        <span class="error_text"> {{ registerErrors.serverError }} </span> 
+                    </p>
             </form>
         </div>
     </section>
@@ -104,7 +108,6 @@
         font-weight: 400;
         font-size: 1rem;
         width: 100%;
-        height: 380px;
     }
 
     .form_group{
@@ -117,7 +120,7 @@
         position: absolute;
         inset: 75% 0 0 0;
         content: attr(data-error);
-        color: red;
+        color: var(--error-color);
         font-size: 0.95rem;
     }
 
@@ -168,6 +171,9 @@
 
     .secondary_btn:hover{
         background-color: var(--primary-color);
+    }
+    .error_text{
+        padding-left: 2px;
     }
 
     @media screen and (min-width: 769px) {
